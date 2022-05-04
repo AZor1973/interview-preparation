@@ -10,6 +10,10 @@ public class Person {
     private int age;
     private String gender;
 
+    private Person(){
+
+    }
+
     public static Builder builder() {
         return new Builder();
     }
