@@ -1,6 +1,6 @@
 package interview.preparation.lesson_1.exercise_3;
 
-public class Square extends Shape{
+public class Square implements Shape{
     private final int side;
 
     public Square(int side) {

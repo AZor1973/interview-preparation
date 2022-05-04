@@ -1,6 +1,6 @@
 package interview.preparation.lesson_1.exercise_3;
 
-public class Triangle extends Shape{
+public class Triangle implements Shape{
     private final double firstSide;
     private final double secondSide;
     private final double angle;

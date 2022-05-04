@@ -1,6 +1,6 @@
 package interview.preparation.lesson_1.exercise_3;
 
-public class Circle extends Shape{
+public class Circle implements Shape{
     private final int radius;
 
     public Circle(int radius) {
