@@ -46,11 +46,11 @@ VALUES (1),(1),(1),
        (7),(7),(7),(7),(7),(7),(7),(7),
        (8),(8),(8),(8),(8),(8),(8),(8);
 
--- #1
 -- Тут нужно использовать стандартную проверку на пересечение интервалов
 -- https://protocoder.ru/alg/datescrossing
 -- Попробуйте проверить ваш запрос для случаев, когда время двух сеансов
 -- полностью совпадает или когда один сеанс полностью внутри другого
+-- #1
 WITH select_break_duration AS (SELECT f.title AS first_film_title,
                                       s.start_time AS first_film_start_time,
                                       f.duration AS first_film_duration,
@@ -64,6 +64,21 @@ WITH select_break_duration AS (SELECT f.title AS first_film_title,
                                                   ON f.id = s.film_id
                                ORDER BY break_duration DESC)
 SELECT * FROM select_break_duration WHERE break_duration < interval '00:00:00';
+
+-- #1 с учётом замечаний
+WITH select_break_duration AS (SELECT f.title AS first_film_title,
+                                      s.start_time AS first_film_start_time,
+                                      f.duration AS first_film_duration,
+                                      lead(f.title) OVER(ORDER BY s.id) AS second_film_title,
+                                      lead(s.start_time) OVER(ORDER BY s.id) AS second_film_start_time,
+                                      lead(f.duration) OVER(ORDER BY s.id) AS second_film_duration
+                               FROM films f
+                                        LEFT JOIN sessions s
+                                                  ON f.id = s.film_id)
+SELECT * FROM select_break_duration
+WHERE (SELECT (first_film_start_time, first_film_start_time + make_interval(mins => first_film_duration))
+                  overlaps
+              (second_film_start_time, second_film_start_time + make_interval(mins => second_film_duration)));
 
 -- #2
 WITH select_break_duration AS (SELECT f.title AS film_title,
