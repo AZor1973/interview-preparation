@@ -47,6 +47,10 @@ VALUES (1),(1),(1),
        (8),(8),(8),(8),(8),(8),(8),(8);
 
 -- #1
+-- Тут нужно использовать стандартную проверку на пересечение интервалов
+-- https://protocoder.ru/alg/datescrossing
+-- Попробуйте проверить ваш запрос для случаев, когда время двух сеансов
+-- полностью совпадает или когда один сеанс полностью внутри другого
 WITH select_break_duration AS (SELECT f.title AS first_film_title,
                                       s.start_time AS first_film_start_time,
                                       f.duration AS first_film_duration,
@@ -75,6 +79,7 @@ WITH select_break_duration AS (SELECT f.title AS film_title,
 SELECT * FROM select_break_duration WHERE break_duration >= interval '00:30:00';
 
 -- #3
+-- Почитайте про WITH ROLLUP
 WITH current_film as (SELECT f.title as film_title,
                         count(t.id) as total_visitors,
                         (SELECT avg(count_visitors) as avg_visitors_per_session FROM
@@ -92,7 +97,7 @@ WITH current_film as (SELECT f.title as film_title,
                                     ON s.id = t.session_id
                  GROUP BY f.id
                  ORDER BY total_revenue DESC)
-    (SELECT * FROM current_film)
+(SELECT * FROM current_film)
 UNION ALL
 (SELECT 'Total: ',
         sum(current_film.total_visitors),
