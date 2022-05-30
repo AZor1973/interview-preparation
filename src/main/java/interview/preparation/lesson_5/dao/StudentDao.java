@@ -13,17 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StudentDao {
     private final SessionFactory sessionFactory;
-    private static final Integer numberOfStudents = 1000;
-
-    public void createRandomStudents() {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        for (int i = 0; i < numberOfStudents; i++) {
-            Student student = StudentUtils.getNewStudent();
-            session.save(student);
-        }
-        session.getTransaction().commit();
-    }
 
     public void add(Student student) {
         Session session = sessionFactory.getCurrentSession();
@@ -65,6 +54,7 @@ public class StudentDao {
         return students;
     }
 
+//    Это не ошибка, но для чтения транзакцию требуется открывать не всегда.
     public Student findById(Long id) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();

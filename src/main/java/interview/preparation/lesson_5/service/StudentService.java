@@ -2,7 +2,10 @@ package interview.preparation.lesson_5.service;
 
 import interview.preparation.lesson_5.dao.StudentDao;
 import interview.preparation.lesson_5.entity.Student;
+import interview.preparation.lesson_5.utils.StudentUtils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 
 import java.util.List;
 
@@ -10,8 +13,14 @@ import java.util.List;
 public class StudentService {
     private final StudentDao studentDao;
 
+    private static final Integer numberOfStudents = 1000;
+
+    @Transactional
     public void createRandomStudents() {
-        studentDao.createRandomStudents();
+        for (int i = 0; i < numberOfStudents; i++) {
+            Student student = StudentUtils.getNewStudent();
+            studentDao.add(student);
+        }
     }
 
     public void add(Student student) {
